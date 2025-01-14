@@ -1,23 +1,18 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function Kewl() {
   const [activeTab, setActiveTab] = useState("Landscape");
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-primary text-white gap-5">
-      {/* 
-      Write something unique about you here! 
-      It could be a club you're part of, a weird skill you have, or something special that happened to you.
-      Feel free to put links, images, whatever! 
-      Don't worry about styling- we aren't grading you on this- it's just to get to know you better! :) 
-      */}
       <div className="mx-56 mt-8">
-        Hi, I'm Jonathan Jia! Some unique things about me are that I play a
-        rhythm game called Osu! and I love film photography. I'm currently rank
-        #77,000 in the world in Osu! and am aiming to be rank #25,000 by the end
-        of this year. I got into photography during my senior year of high
-        school and have been taking pictures everywhere I go ever since. I
+        Hi, I&#39;m Jonathan Jia! Some unique things about me are that I play a
+        rhythm game called Osu! and I love film photography. I&#39;m currently
+        rank #77,000 in the world in Osu! and am aiming to be rank #25,000 by
+        the end of this year. I got into photography during my senior year of
+        high school and have been taking pictures everywhere I go ever since. I
         mainly do landscape, street, and automotive photography but I want to
         learn to take better pictures of people too.
       </div>
@@ -27,7 +22,12 @@ export default function Kewl() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <img src="/images/osuLogo.png" className="w-5 h-5"></img>
+        <Image
+          src="/images/osuLogo.png"
+          width={20}
+          height={20}
+          alt="Osu logo"
+        />
         My Osu! profile
       </a>
 
@@ -90,26 +90,16 @@ export default function Kewl() {
               role="tabpanel"
               className="flex flex-col gap-4 pb-4"
             >
-              <img
-                className="w-full object-cover rounded-lg"
-                src="/images/landscape1.jpg"
-                alt="landscape"
-              />
-              <img
-                className="w-full object-cover rounded-lg"
-                src="/images/landscape2.jpg"
-                alt="landscape"
-              />
-              <img
-                className="w-full object-cover rounded-lg"
-                src="/images/landscape3.jpg"
-                alt="landscape"
-              />
-              <img
-                className="w-full object-cover rounded-lg"
-                src="/images/landscape4.jpg"
-                alt="landscape"
-              />
+              {[1, 2, 3, 4].map((num) => (
+                <Image
+                  key={num}
+                  className="w-full object-cover rounded-lg"
+                  src={`/images/landscape${num}.jpg`}
+                  width={800}
+                  height={600}
+                  alt={`Landscape ${num}`}
+                />
+              ))}
             </div>
           )}
 
@@ -119,36 +109,16 @@ export default function Kewl() {
               role="tabpanel"
               className="columns-2 md:columns-3 gap-4 mb-4"
             >
-              <img
-                className="w-full object-cover mb-4 rounded-lg"
-                src="/images/street1.JPG"
-                alt="street"
-              />
-              <img
-                className="w-full object-cover mb-4 rounded-lg"
-                src="/images/street2.JPG"
-                alt="street"
-              />
-              <img
-                className="w-full object-cover mb-4 rounded-lg"
-                src="/images/street3.JPG"
-                alt="street"
-              />
-              <img
-                className="w-full object-cover mb-4 rounded-lg"
-                src="/images/street4.jpg"
-                alt="street"
-              />
-              <img
-                className="w-full object-cover mb-4 rounded-lg"
-                src="/images/street6.JPG"
-                alt="street"
-              />
-              <img
-                className="w-full object-cover mb-4 rounded-lg"
-                src="/images/street7.JPG"
-                alt="street"
-              />
+              {[1, 2, 3, 4, 6, 7].map((num) => (
+                <Image
+                  key={num}
+                  className="w-full object-cover mb-4 rounded-lg"
+                  src={`/images/street${num}.JPG`}
+                  width={600}
+                  height={400}
+                  alt={`Street ${num}`}
+                />
+              ))}
             </div>
           )}
 
@@ -158,51 +128,16 @@ export default function Kewl() {
               role="tabpanel"
               className="columns-2 md:columns-3 gap-4 mb-4"
             >
-              <img
-                className="w-full object-cover mb-4 rounded-lg"
-                src="/images/auto1.jpeg"
-                alt="street"
-              />
-              <img
-                className="w-full object-cover mb-4 rounded-lg"
-                src="/images/auto2.JPG"
-                alt="street"
-              />
-              <img
-                className="w-full object-cover mb-4 rounded-lg"
-                src="/images/auto4.jpg"
-                alt="street"
-              />
-              <img
-                className="w-full object-cover mb-4 rounded-lg"
-                src="/images/auto5.jpg"
-                alt="street"
-              />
-              <img
-                className="w-full object-cover mb-4 rounded-lg"
-                src="/images/auto6.jpg"
-                alt="street"
-              />
-              <img
-                className="w-full object-cover mb-4 rounded-lg"
-                src="/images/auto7.jpg"
-                alt="street"
-              />
-              <img
-                className="w-full object-cover mb-4 rounded-lg"
-                src="/images/auto8.jpg"
-                alt="street"
-              />
-              <img
-                className="w-full object-cover mb-4 rounded-lg"
-                src="/images/auto9.jpg"
-                alt="street"
-              />
-              <img
-                className="w-full object-cover mb-4 rounded-lg"
-                src="/images/auto10.jpg"
-                alt="street"
-              />
+              {[1, 2, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                <Image
+                  key={num}
+                  className="w-full object-cover mb-4 rounded-lg"
+                  src={`/images/auto${num}.jpg`}
+                  width={600}
+                  height={400}
+                  alt={`Automotive ${num}`}
+                />
+              ))}
             </div>
           )}
         </div>
