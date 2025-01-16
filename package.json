@@ -10,12 +10,14 @@
     "start": "next start"
   },
   "dependencies": {
+    "@next/font": "^14.2.15",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "mongoose": "^8.9.4",
     "next": "15.1.2",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.4.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

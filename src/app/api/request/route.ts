@@ -3,7 +3,6 @@
 import { NextResponse } from "next/server";
 import connectDB from "../../../lib/db";
 import Request from "../../models/Requests";
-import { PAGINATION_PAGE_SIZE } from "../../../lib/constants/config"; // Adjust based on where you defined it
 import {
   HTTP_STATUS_CODE,
   ResponseType,
@@ -17,7 +16,7 @@ export async function PUT(req: Request) {
     const body = await req.json();
     const { requestorName, itemRequested } = body;
 
-    //validate input
+    //validate input of put
     if (!requestorName || !itemRequested) {
       return NextResponse.json(
         { message: RESPONSES[ResponseType.INVALID_INPUT].message },
@@ -25,7 +24,7 @@ export async function PUT(req: Request) {
       );
     }
 
-    //field length verification
+    //length verification
     if (
       typeof requestorName !== "string" ||
       requestorName.trim().length < 3 ||
@@ -54,6 +53,7 @@ export async function PUT(req: Request) {
       itemRequested: itemRequested.trim(),
       createdDate: new Date(),
       status: "pending",
+      lastEditedDate: new Date(),
     });
 
     const savedRequest = await newRequest.save();
@@ -76,45 +76,57 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const pageParam = searchParams.get("page");
-    const status = searchParams.get("status");
+    const status: string | null = searchParams.get("status");
 
+    //validating page
     const page = pageParam ? parseInt(pageParam, 10) : 1;
-
-    //validate page number
     if (isNaN(page) || page < 1) {
       return NextResponse.json(
-        { message: RESPONSES[ResponseType.INVALID_INPUT].message },
-        { status: RESPONSES[ResponseType.INVALID_INPUT].code }
+        { message: "Invalid page number" },
+        { status: 400 }
       );
     }
 
-    //build query
-    const query: any = {};
+    const limit = 6;
+
+    //query
+    const query: Record<string, unknown> = {};
     if (status) {
-      const allowedStatuses = ["pending", "completed", "approved", "rejected"];
+      const allowedStatuses: string[] = [
+        "pending",
+        "completed",
+        "approved",
+        "rejected",
+      ];
       if (!allowedStatuses.includes(status)) {
         return NextResponse.json(
-          { message: RESPONSES[ResponseType.INVALID_INPUT].message },
-          { status: RESPONSES[ResponseType.INVALID_INPUT].code }
+          { message: "Invalid status value" },
+          { status: 400 }
         );
       }
       query.status = status;
     }
-
-    //fetch with pagination
+    //getting data with pagination
+    const totalItems = await Request.countDocuments(query);
     const requests = await Request.find(query)
-      .sort({ createdDate: -1 }) // Descending order
-      .skip((page - 1) * PAGINATION_PAGE_SIZE)
-      .limit(PAGINATION_PAGE_SIZE);
+      .sort({ createdDate: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
 
-    return NextResponse.json(requests, {
-      status: RESPONSES[ResponseType.SUCCESS].code,
-    });
+    return NextResponse.json(
+      {
+        requests,
+        totalItems,
+        currentPage: page,
+        totalPages: Math.ceil(totalItems / limit),
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error fetching requests:", error);
     return NextResponse.json(
-      { message: RESPONSES[ResponseType.UNKNOWN_ERROR].message },
-      { status: RESPONSES[ResponseType.UNKNOWN_ERROR].code }
+      { message: "An unexpected error occurred" },
+      { status: 500 }
     );
   }
 }
@@ -126,7 +138,6 @@ export async function PATCH(req: Request) {
     const body = await req.json();
     const { id, status } = body;
 
-    //validate input
     if (!id || !status) {
       return NextResponse.json(
         { message: RESPONSES[ResponseType.INVALID_INPUT].message },
@@ -142,9 +153,8 @@ export async function PATCH(req: Request) {
       );
     }
 
-    //update request by ID
     const updatedRequest = await Request.findByIdAndUpdate(
-      id, // Query by `_id` (Mongoose's default identifier)
+      id,
       { status, lastEditedDate: new Date() },
       { new: true, runValidators: true }
     );
